@@ -16,7 +16,7 @@ public class DL {
 		return System.currentTimeMillis();
 	}
 
-	public static void Init () {
+	public static void init () {
 		textures = new ArrayList<>();
 		paths = new ArrayList<>();
 		shaders = new ArrayList<>();

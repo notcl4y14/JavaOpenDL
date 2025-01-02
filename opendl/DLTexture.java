@@ -45,12 +45,55 @@ public class DLTexture {
 		this.set(y * this.width + x, color);
 	}
 
+	public DLTexture clip (DLVec4 rect) {
+		int x1 = (int) rect.v1;
+		int y1 = (int) rect.v2;
+		int x2 = (int) rect.v3;
+		int y2 = (int) rect.v4;
+
+		DLTexture texture = new DLTexture(x2 - x1, y2 - y1);
+
+		int x = x1;
+		int y = y1;
+
+		while (x < x2) {
+			while (y < y2) {
+				texture.set( x - x1, y - y1, this.get(x, y) );
+				y++;
+			}
+
+			x++;
+			y = y1;
+		}
+
+		return texture;
+	}
+
 	public void drawTexture (DLTexture texture, int x, int y) {
 		for (int i = 0; i < texture.area; i++) {
 			int drawX = (i % texture.width) + x;
 			int drawY = (i / texture.width) + y;
 
 			this.set(drawX, drawY, texture.get(i));
+		}
+	}
+
+	public void addTexture (DLTexture texture, int x, int y) {
+		for (int i = 0; i < texture.area; i++) {
+			int drawX = (i % texture.width) + x;
+			int drawY = (i / texture.width) + y;
+
+			DLVec4 color1 = this.get(drawX, drawY);
+			DLVec4 color2 =	texture.get(i); 
+
+			DLVec4 color = color1.add(color2);
+
+			color.v1 = color.v1 > 255 ? 255 : color.v1;
+			color.v2 = color.v2 > 255 ? 255 : color.v2;
+			color.v3 = color.v3 > 255 ? 255 : color.v3;
+			color.v4 = color.v4 > 255 ? 255 : color.v4;
+
+			this.set(drawX, drawY, color);
 		}
 	}
 }

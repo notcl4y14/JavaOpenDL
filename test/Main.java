@@ -61,6 +61,10 @@ public class Main {
 		// Drawing Rectangle Texture to the first Texture
 		texture.drawTexture(rectTexture, rectPath.x, rectPath.y);
 
+		// Clipping a part of Texture and drawing it onto that Texture
+		DLTexture partTexture = texture.clip(new DLVec4(0, 0, 45, 45));
+		texture.drawTexture(partTexture, 256 - 45, 256 - 45);
+
 		// Saving the result in a new file
 		saveTexture(texture, "output.png");
 	}
