@@ -26,13 +26,7 @@ public class Main {
 		colorShader.scale = 1;
 
 		// Applying the shader to the texture
-		for (int i = 0; i < texture.area; i++) {
-			colorShader.inPosX = i % texture.width;
-			colorShader.inPosY = i / texture.width;
-			
-			colorShader.run();
-			texture.set(i, colorShader.DLColor);
-		}
+		texture = texture.applyShader(colorShader);
 
 		// Creating and initializing Rectangle Path
 		RectanglePath rectPath = new RectanglePath();
@@ -50,13 +44,7 @@ public class Main {
 		colorShader.scale = 256/25;
 		
 		// Applying Color Shader to Rectangle Texture
-		for (int i = 0; i < rectTexture.area; i++) {
-			colorShader.inPosX = i % rectTexture.width;
-			colorShader.inPosY = i / rectTexture.width;
-
-			colorShader.run();
-			rectTexture.set(i, colorShader.DLColor);
-		}
+		rectTexture = rectTexture.applyShader(colorShader);
 
 		// Drawing Rectangle Texture to the first Texture
 		texture.drawTexture(rectTexture, rectPath.x, rectPath.y);
@@ -67,21 +55,15 @@ public class Main {
 
 		// Creating and initializing Blur Shader
 		BlurShader blurShader = new BlurShader();
-		blurShader.inRadius = 1;
-		blurShader.inRes = 1;
-		blurShader.inTexture = texture;
+		blurShader.radius = 1;
+		blurShader.resolution = 1;
+		blurShader.texture = texture;
 
 		// Creating a new Texture for drawing on (double-buffering)
 		DLTexture newTexture = new DLTexture(256, 256);
 		
 		// Applying Blur Shader to Texture
-		for (int i = 0; i < texture.area; i++) {
-			blurShader.inPosX = i % texture.width;
-			blurShader.inPosY = i / texture.width;
-
-			blurShader.run();
-			newTexture.set(i, blurShader.DLColor);
-		}
+		newTexture = newTexture.applyShader(blurShader);
 
 		// Applying the new Texture to that Texture
 		texture.drawTexture(newTexture, 0, 0);

@@ -45,6 +45,38 @@ public class DLTexture {
 		this.set(y * this.width + x, color);
 	}
 
+	public DLTexture applyShader (DLShader shader, boolean doubleBuffered) {
+		DLTexture texture = doubleBuffered ? new DLTexture(width, height) : this;
+
+		int index = 0;
+
+		while (index < this.area) {
+			DLVec4 color = this.get(index);
+			DLVec2 position = new DLVec2(index % width, (int)index / width);
+
+			shader.DLColor = color;
+			shader.DLPosition = position;
+			
+			shader.run();
+
+			texture.set(index, shader.DLColor);
+			index++;
+		}
+
+		return texture;
+	}
+
+	public DLTexture applyShader (DLShader shader) {
+		return applyShader(shader, true);
+	}
+
+	public DLTexture applyShader (DLShader shader, boolean doubleBuffered, boolean directDraw) {
+		DLTexture texture = this.applyShader(shader, doubleBuffered);
+		if (directDraw)
+			this.data = texture.data;
+		return texture;
+	}
+
 	public DLTexture clip (DLVec4 rect) {
 		int x1 = (int) rect.v1;
 		int y1 = (int) rect.v2;
