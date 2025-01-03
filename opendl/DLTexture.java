@@ -78,6 +78,29 @@ public class DLTexture {
 		}
 	}
 
+	public void drawTexture (DLTexture texture, DLVec4 rect) {
+		int x1 = (int)rect.v1;
+		int y1 = (int)rect.v2;
+		int x2 = (int)rect.v3;
+		int y2 = (int)rect.v4;
+
+		int width = x2 - x1;
+		int height = y2 - y1;
+		int area = width * height;
+
+		double widthFraction = texture.width / width;
+		double heightFraction = texture.height / height;
+
+		for (int i = 0; i < area; i++) {
+			int x = (i % width);
+			int y = (i / width);
+			int pixelX = (int) (x * widthFraction);
+			int pixelY = (int) (y * heightFraction);
+
+			this.set(x + x1, y + y1, texture.get(pixelX, pixelY));
+		}
+	}
+
 	public void addTexture (DLTexture texture, int x, int y) {
 		for (int i = 0; i < texture.area; i++) {
 			int drawX = (i % texture.width) + x;

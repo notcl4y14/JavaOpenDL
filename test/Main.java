@@ -65,6 +65,30 @@ public class Main {
 		DLTexture partTexture = texture.clip(new DLVec4(0, 0, 45, 45));
 		texture.drawTexture(partTexture, 256 - 45, 256 - 45);
 
+		// Creating and initializing Blur Shader
+		BlurShader blurShader = new BlurShader();
+		blurShader.inRadius = 1;
+		blurShader.inRes = 1;
+		blurShader.inTexture = texture;
+
+		// Creating a new Texture for drawing on (double-buffering)
+		DLTexture newTexture = new DLTexture(256, 256);
+		
+		// Applying Blur Shader to Texture
+		for (int i = 0; i < texture.area; i++) {
+			blurShader.inPosX = i % texture.width;
+			blurShader.inPosY = i / texture.width;
+
+			blurShader.run();
+			newTexture.set(i, blurShader.DLColor);
+		}
+
+		// Applying the new Texture to that Texture
+		texture.drawTexture(newTexture, 0, 0);
+
+		// Drawing the new Texture to that Texture with a different position size
+		texture.drawTexture(newTexture, new DLVec4(40, 40, 80, 80));
+
 		// Saving the result in a new file
 		saveTexture(texture, "output.png");
 	}
